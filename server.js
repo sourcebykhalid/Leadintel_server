@@ -12,13 +12,11 @@ const app = express();
 // CORS Configuration: Allow specific origins without trailing slashes
 const corsOptions = {
   origin: [
-    "https://teamlead-vert.vercel.app", // Deployed frontend URL
-    "http://localhost:5173", // Localhost for development
+    "https://teamlead-vert.vercel.app",
+    "http://localhost:5173", // Localhost for development testing
   ],
-  origin: "*",
   methods: ["GET", "POST"],
-  credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, // Allow credentials in requests
 };
 
 app.use(cors(corsOptions)); // Apply CORS with the specified options
