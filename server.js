@@ -1,4 +1,5 @@
-import express, { json } from "express";
+// backend.js
+import express from "express";
 import request from "axios";
 import cors from "cors";
 import { configDotenv } from "dotenv";
@@ -8,17 +9,20 @@ configDotenv();
 
 const app = express();
 
-// CORS Configuration: Allow only specific origins
+// CORS Configuration: Allow specific origins without trailing slashes
 const corsOptions = {
   origin: [
-    "https://teamlead-vert.vercel.app/", // Replace with your deployed app's URL
-    "http://localhost:5173", // Allow localhost during development
+    "https://teamlead-vert.vercel.app", // Deployed frontend URL
+    "http://localhost:5173", // Localhost for development
   ],
-  methods: "GET",
+  origin: "*",
+  methods: ["GET", "POST"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions)); // Apply CORS with the specified options
-app.use(json());
+app.use(express.json());
 
 // API route for fetching company data
 app.get("/api/company-data", async (req, res) => {
@@ -36,7 +40,7 @@ app.get("/api/company-data", async (req, res) => {
     url: "https://fresh-linkedin-profile-data.p.rapidapi.com/get-company-by-domain",
     params: { domain },
     headers: {
-      "x-rapidapi-key": process.env.RAPIDAPI_KEY,
+      "x-rapidapi-key": process.env.RAPIDAPI_KEY, // Ensure this is set in Render
       "x-rapidapi-host": "fresh-linkedin-profile-data.p.rapidapi.com",
     },
   };
@@ -54,6 +58,6 @@ app.get("/api/company-data", async (req, res) => {
   }
 });
 
-// Start the server
-const PORT = 5000;
+// Dynamic PORT binding for Render
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
